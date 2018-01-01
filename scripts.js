@@ -45,8 +45,17 @@ $(window).on('load',function() {
 
   $(".new-button").on('click',function(){
 
-    //toggle class here in future
-    $(this).parents(".main").find('.res-form').css({"display": "block"});
+    //anonymous login check
+    firebase.auth().onAuthStateChanged(function(firebaseUser){
+      if(firebaseUser){
+        console.log("user logged in");
+      }else {
+        firebase.auth().signInAnonymously();
+      }
+    });
+
+    $(this).parents(".main").find('.res-form').toggleClass("fade-in");
+    // $(this).parents(".main").find('.res-form').css({"display": "block"});
 
   });
 
@@ -56,8 +65,13 @@ $(window).on('load',function() {
     var message = $("#resolution").val();
     writeUserData(message);
     addElementToPage(message);
-    //toggle class here in future
-    form.css({"display": "none"});
+
+    form.addClass("is-sent");
+    setTimeout(function(){
+      form.removeClass('is-sent');
+      form.removeClass('fade-in');
+    },1000);
+    // form.css({"display": "none"});
     $("#resolution").val("");
   });
 });
